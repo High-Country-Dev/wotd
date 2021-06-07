@@ -1,20 +1,53 @@
 import React from "react";
 import {
+  unstable_createMuiStrictModeTheme as createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
+import { blue, grey } from "@material-ui/core/colors";
+import {
   Switch as RouterSwitch,
   Route,
   Redirect,
   BrowserRouter as Router,
 } from "react-router-dom";
+import { QueryClientProvider, QueryClient } from "react-query";
 import { auth } from "./utils/firebase";
-import LoginScreen from "./components/LoginScreen";
 
-import logo from "./logo.svg";
-import "./App.css";
+import LoginScreen from "./components/LoginScreen";
 import WotdScreen from "./components/WotdScreen";
+
+import "./App.css";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+
+  const darkMode = true;
+  const theme = createMuiTheme({
+    palette: {
+      type: darkMode ? "dark" : "light",
+      text: {
+        primary: darkMode ? "#FFF" : "#000",
+        secondary: darkMode ? grey[400] : "#333",
+      },
+      primary: {
+        main: darkMode ? "#FFF" : grey[200],
+      },
+      secondary: {
+        main: darkMode ? grey[200] : grey[800],
+      },
+      background: {
+        default: darkMode ? "#FFF" : "#FFF",
+      },
+      // background: {
+      //   ...darkMode
+      //   ? { default: '#f0f0f0' }
+      //   : {}
+      // }
+    },
+  });
 
   React.useEffect(() => {
     auth().onAuthStateChanged((user) => {
@@ -29,23 +62,27 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
-      <Router>
-        <RouterSwitch>
-          <LoginRoute
-            path={`/login`}
-            loggedIn={loggedIn}
-            component={LoginScreen}
-          />
-          <Route path={`/`} component={WotdScreen} />
-          <PrivateRoute
-            path={`/update`}
-            loggedIn={loggedIn}
-            component={LoginScreen}
-          />
-        </RouterSwitch>
-      </Router>
-    </div>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
+          <Router>
+            <RouterSwitch>
+              <LoginRoute
+                path={`/login`}
+                loggedIn={loggedIn}
+                component={LoginScreen}
+              />
+              <Route path={`/`} component={WotdScreen} />
+              <PrivateRoute
+                path={`/update`}
+                loggedIn={loggedIn}
+                component={LoginScreen}
+              />
+            </RouterSwitch>
+          </Router>
+        </div>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 
@@ -56,12 +93,7 @@ type LoginRouteProps = {
   path: string;
   loggedIn: boolean;
 };
-// type ExtendedRouteProps = {
-//   location?: H.Location;
-//   component?: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
-//   render?: (props: RouteComponentProps<any, StaticContext, unknown>) => React.ReactNode;
-//   path?: string | string[];
-// }
+
 const LoginRoute = ({
   component: Component,
   loggedIn,

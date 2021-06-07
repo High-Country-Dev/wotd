@@ -5,6 +5,7 @@ import "firebase/analytics";
 
 import * as FirebaseUI from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import { WordOfTheDayType } from "./types";
 
 // Outdated comment
 // https://firebase.google.com/docs/admin/setup#node.js_1
@@ -73,14 +74,4 @@ export const uiConfig = {
 
 export const loadLoginUi = () => {
   ui.start("#firebaseui-auth-container", uiConfig);
-};
-
-export const getRecentWotds = () => {
-  db.ref("wotd")
-    .get()
-    .then((snapshot: any) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-      }
-    });
 };
