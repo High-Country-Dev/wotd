@@ -1,4 +1,8 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import "firebase/analytics";
+
 import * as FirebaseUI from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
@@ -21,10 +25,7 @@ if (!firebase.apps.length) {
   const firebaseConfig = JSON.parse(
     Buffer.from(base64_config ?? "", "base64").toString("ascii")
   );
-  console.log(firebaseConfig);
   firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app(); // if already initialized, use that one
 }
 
 export const auth = firebase.auth;
@@ -72,4 +73,14 @@ export const uiConfig = {
 
 export const loadLoginUi = () => {
   ui.start("#firebaseui-auth-container", uiConfig);
+};
+
+export const getRecentWotds = () => {
+  db.ref("wotd")
+    .get()
+    .then((snapshot: any) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+      }
+    });
 };
