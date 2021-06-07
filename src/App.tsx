@@ -1,8 +1,11 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
-function App() {
+console.log("testing the variable REACT_APP_TEST_ENV_VAR");
+console.log(process.env.REACT_APP_TEST_ENV_VAR);
+
+const App = () => {
   return (
     <div className="App">
       <header className="App-header">
@@ -21,6 +24,6 @@ function App() {
       </header>
     </div>
   );
-}
+};
 
 export default App;
