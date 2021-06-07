@@ -3,7 +3,8 @@ import {
   unstable_createMuiStrictModeTheme as createMuiTheme,
   ThemeProvider,
 } from "@material-ui/core/styles";
-import { blue, grey } from "@material-ui/core/colors";
+import { grey } from "@material-ui/core/colors";
+import Button from "@material-ui/core/Button";
 import {
   Switch as RouterSwitch,
   Route,
@@ -64,23 +65,27 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <div className="App">
-          <Router>
-            <RouterSwitch>
-              <LoginRoute
-                path={`/login`}
-                loggedIn={loggedIn}
-                component={LoginScreen}
-              />
-              <Route path={`/`} component={WotdScreen} />
-              <PrivateRoute
-                path={`/update`}
-                loggedIn={loggedIn}
-                component={LoginScreen}
-              />
-            </RouterSwitch>
-          </Router>
-        </div>
+        {loggedIn && (
+          <div style={{ position: "absolute", right: 30, top: 30 }}>
+            <Button variant="contained" onClick={() => auth().signOut()}>
+              Logout
+            </Button>
+          </div>
+        )}
+        <Router>
+          <RouterSwitch>
+            <LoginRoute
+              path={`/login`}
+              loggedIn={loggedIn}
+              component={LoginScreen}
+            />
+            <PrivateRoute
+              path={`/`}
+              loggedIn={loggedIn}
+              component={WotdScreen}
+            />
+          </RouterSwitch>
+        </Router>
       </QueryClientProvider>
     </ThemeProvider>
   );

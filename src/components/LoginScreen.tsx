@@ -38,6 +38,7 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        height: "100%",
       }}
     >
       {/* <Button variant="contained" onClick={() => signin('etymology.explorer.developer@gmail.com', 'Nopasses45')}>
