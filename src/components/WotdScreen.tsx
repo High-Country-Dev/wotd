@@ -28,13 +28,33 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
   } = useAllWotdWords();
   //   console.log("WotdScreen data", data);
 
-  const [lastDate] = Object.keys(recentWotds ?? {})
-    .map((w) => new Date(w + "z"))
-    .reverse();
+  let dates: number[];
+  let allDateNodes: React.ReactNode[] = [];
 
-  const nextDate = getFirebaseDateString(
-    lastDate ? addDays(lastDate, 1) : new Date()
-  );
+  if (recentWotds) {
+    dates = Object.keys(recentWotds ?? {}).map((w) =>
+      new Date(w + "z").valueOf()
+    );
+
+    const firstDate = Math.min(...dates);
+    const lastDate = Math.max(...dates);
+
+    for (let i = lastDate; i >= firstDate; i -= 24 * 60 * 60 * 1000) {
+      // .map(([date, { word, body, id }]) => (
+      const date = getFirebaseDateString(new Date(i));
+      const { word = "", body = "", id = -1 } = recentWotds[date] ?? {};
+      allDateNodes.push(
+        <React.Fragment key={date + String(i)}>
+          <WotdItem word={word} body={body} id={id} date={date} />
+          <Divider />
+        </React.Fragment>
+      );
+    }
+  }
+
+  // const nextDate = getFirebaseDateString(
+  //   lastDate ? addDays(lastDate, 1) : new Date()
+  // );
 
   const classes = useStyles();
 
@@ -80,7 +100,8 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
       ) : (
         <>
           <List className={classes.root}>
-            <WotdItem
+            {allDateNodes}
+            {/* <WotdItem
               key="newest"
               word={""}
               body={""}
@@ -97,6 +118,7 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
                   <Divider />
                 </React.Fragment>
               ))}
+            */}
           </List>
           <div>{isFetching ? "Background Updating..." : " "}</div>
         </>

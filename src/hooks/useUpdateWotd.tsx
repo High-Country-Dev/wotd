@@ -20,6 +20,7 @@ const updateWotd = async ({
   return db.ref(`wotd/${date}`).update({
     body,
     word,
+    date,
     id,
     roots,
     language: "English",
