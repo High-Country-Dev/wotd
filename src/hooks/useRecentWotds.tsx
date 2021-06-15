@@ -25,8 +25,8 @@ const useRecentWotds = (limit: number) => {
     WordOfTheDayDictType,
     { message: string },
     WordOfTheDayDictType,
-    [string, number]
-  >(["wotd", limit], () => getRecentWotds(limit));
+    string
+  >("wotd", () => getRecentWotds(limit));
 };
 
 export default useRecentWotds;

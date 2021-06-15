@@ -19,7 +19,17 @@ import WotdScreen from "./components/WotdScreen";
 
 import "./App.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: process.env.NODE_ENV === "production",
+      refetchOnWindowFocus: process.env.NODE_ENV === "production",
+      refetchOnMount: false,
+      cacheTime: 1000 * 60 * 60 * 1,
+      staleTime: 1000 * 60 * 60 * 1,
+    },
+  },
+});
 
 const App = () => {
   const [loggedIn, setLoggedIn] = React.useState(false);

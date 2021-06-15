@@ -12,6 +12,7 @@
     "@types/node": "^12.20.14",
     "@types/react": "^17.0.9",
     "@types/react-dom": "^17.0.6",
+    "axios": "^0.21.1",
     "firebase": "^8.6.5",
     "firebaseui": "^4.8.0",
     "react": "^17.0.2",

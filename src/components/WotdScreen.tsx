@@ -1,13 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Divider from "@material-ui/core/Divider";
 
 import useRecentWotds from "../hooks/useRecentWotds";
 import useAllWotdWords from "../hooks/useAllWotdWords";
 import { TextField, Typography } from "@material-ui/core";
+import WotdItem from "./WotdItem";
+import { addDays, getFirebaseDateString } from "../utils/functions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,14 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
     error: allWotdWordsError,
   } = useAllWotdWords();
   //   console.log("WotdScreen data", data);
+
+  const [lastDate] = Object.keys(recentWotds ?? {})
+    .map((w) => new Date(w + "z"))
+    .reverse();
+
+  const nextDate = getFirebaseDateString(
+    lastDate ? addDays(lastDate, 1) : new Date()
+  );
 
   const classes = useStyles();
 
@@ -71,16 +80,22 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
       ) : (
         <>
           <List className={classes.root}>
+            <WotdItem
+              key="newest"
+              word={""}
+              body={""}
+              id={-1}
+              // date={newDayString}
+              date={nextDate}
+            />
+            <Divider />
             {Object.entries(recentWotds)
               .reverse()
-              .map(([date, { word, body }]) => (
-                <ListItem key={date}>
-                  <ListItemText
-                    primaryTypographyProps={{ color: "primary" }}
-                    primary={date + " : " + word}
-                    secondary={body}
-                  />
-                </ListItem>
+              .map(([date, { word, body, id }]) => (
+                <React.Fragment key={date}>
+                  <WotdItem word={word} body={body} id={id} date={date} />
+                  <Divider />
+                </React.Fragment>
               ))}
           </List>
           <div>{isFetching ? "Background Updating..." : " "}</div>
