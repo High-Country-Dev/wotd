@@ -10,6 +10,8 @@ import { TextField, Typography } from "@material-ui/core";
 import WotdItem from "./WotdItem";
 import { addDays, getFirebaseDateString } from "../utils/functions";
 
+const DAY = 24 * 60 * 60 * 1000;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -39,7 +41,7 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
     const firstDate = Math.min(...dates);
     const lastDate = Math.max(...dates);
 
-    for (let i = lastDate; i >= firstDate; i -= 24 * 60 * 60 * 1000) {
+    for (let i = lastDate + DAY; i >= firstDate; i -= DAY) {
       // .map(([date, { word, body, id }]) => (
       const date = getFirebaseDateString(new Date(i));
       const { word = "", body = "", id = -1 } = recentWotds[date] ?? {};
