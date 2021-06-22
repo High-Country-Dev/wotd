@@ -9,6 +9,8 @@ import useAllWotdWords from "../hooks/useAllWotdWords";
 import { TextField, Typography } from "@material-ui/core";
 import WotdItem from "./WotdItem";
 import { addDays, getFirebaseDateString } from "../utils/functions";
+import useWotd from "../hooks/useWotd";
+import { WordOfTheDayType } from "../utils/types";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -28,6 +30,10 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
     status: allWotdWordsStatus,
     error: allWotdWordsError,
   } = useAllWotdWords();
+
+  const [date, setDate] = React.useState<string>();
+
+  const { data: wotd } = useWotd(date ?? "");
   //   console.log("WotdScreen data", data);
 
   let dates: number[];
@@ -77,14 +83,30 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
           Error: {allWotdWordsError?.message}
         </Typography>
       ) : (
-        <Autocomplete
-          id="all-wotd-word-combo-box"
-          options={allWords}
-          //   style={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField {...params} label="Combo box" variant="outlined" />
-          )}
-        />
+        <React.Fragment>
+          <Autocomplete<{ date: string; word: string }>
+            id="all-wotd-word-combo-box"
+            options={allWords}
+            getOptionLabel={(option) => option.word}
+            onChange={(event: any, newValue) => setDate(newValue?.date)}
+            //   style={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search all WOTDs"
+                variant="outlined"
+              />
+            )}
+          />
+          {wotd ? (
+            <WotdItem
+              word={wotd.word}
+              body={wotd.body}
+              id={wotd.id}
+              date={wotd.date}
+            />
+          ) : null}
+        </React.Fragment>
       )}
       <h2 style={{ color: "white", marginTop: 0, paddingTop: 20 }}>
         Past / Upcoming Words of the Day
@@ -101,27 +123,7 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
         <span>No data!</span>
       ) : (
         <>
-          <List className={classes.root}>
-            {allDateNodes}
-            {/* <WotdItem
-              key="newest"
-              word={""}
-              body={""}
-              id={-1}
-              // date={newDayString}
-              date={nextDate}
-            />
-            <Divider />
-            {Object.entries(recentWotds)
-              .reverse()
-              .map(([date, { word, body, id }]) => (
-                <React.Fragment key={date}>
-                  <WotdItem word={word} body={body} id={id} date={date} />
-                  <Divider />
-                </React.Fragment>
-              ))}
-            */}
-          </List>
+          <List className={classes.root}>{allDateNodes}</List>
           <div>{isFetching ? "Background Updating..." : " "}</div>
         </>
       )}

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "WOTD Manager",
+  "name": "Word of the Day Manager",
   "icons": [
     {
       "src": "favicon.ico",
