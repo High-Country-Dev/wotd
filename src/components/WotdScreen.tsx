@@ -46,8 +46,10 @@ const WotdScreen: React.FC<WotdScreenProps> = () => {
 
     const firstDate = Math.min(...dates);
     const lastDate = Math.max(...dates);
+    // console.log(new Date(firstDate));
+    // console.log(new Date(lastDate));
 
-    for (let i = lastDate + DAY; i >= firstDate; i -= DAY) {
+    for (let i = lastDate + DAY * 2; i > firstDate; i -= DAY) {
       // .map(([date, { word, body, id }]) => (
       const date = getFirebaseDateString(new Date(i));
       const { word = "", body = "", id = -1 } = recentWotds[date] ?? {};

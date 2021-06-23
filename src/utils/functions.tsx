@@ -15,5 +15,5 @@ export const getFirebaseDateString = (date: Date) => {
   return `${date.getFullYear()}-${prependZeros(
     date.getMonth() + 1,
     2
-  )}-${prependZeros(date.getDate() + 1, 2)}`;
+  )}-${prependZeros(date.getDate(), 2)}`;
 };
