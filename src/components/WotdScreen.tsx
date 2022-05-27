@@ -6,6 +6,8 @@ import List from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Fragment, useState } from 'react'
+import { getFirebaseDateString } from 'utils/functions'
+import { WordOfTheDayType } from 'utils/types'
 import useAllWotdWords from '../hooks/useAllWotdWords'
 import useRecentWotds from '../hooks/useRecentWotds'
 import useWotd from '../hooks/useWotd'
@@ -38,32 +40,31 @@ const WotdScreen = () => {
   const { data: wotd } = useWotd(date ?? '')
   //   console.log("WotdScreen data", data);
 
-  const allDateNodes = Object.values(recentWotds ?? {})
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
-    .map(
-      ({
-        word = '',
-        body = '',
-        id = -1,
-        group_word,
-        group_language,
-        group_id,
-        date,
-      }) => (
-        <Fragment key={`${date}-${id}`}>
-          <WotdItem
-            word={word}
-            body={body}
-            id={id}
-            date={date}
-            group_word={group_word}
-            group_id={group_id}
-            group_language={group_language}
-          />
-          <Divider />
-        </Fragment>
+  const newDateObject: WordOfTheDayType = {
+    word: '',
+    body: '',
+    id: -1,
+    group_word: '',
+    group_language: '',
+    group_id: '',
+    date: getFirebaseDateString(
+      new Date(
+        Math.max(
+          ...Object.values(recentWotds ?? {}).map((w) =>
+            new Date(w.date).valueOf(),
+          ),
+        ) +
+          1000 * 60 * 60 * 24,
       ),
-    )
+    ),
+  }
+
+  const allDateObjects = [
+    newDateObject,
+    ...Object.values(recentWotds ?? {}).sort((a, b) =>
+      a.date < b.date ? 1 : -1,
+    ),
+  ]
 
   const classes = useStyles()
 
@@ -130,7 +131,32 @@ const WotdScreen = () => {
         <span>No data!</span>
       ) : (
         <>
-          <List className={classes.root}>{allDateNodes}</List>
+          <List className={classes.root}>
+            {allDateObjects.map(
+              ({
+                word,
+                body,
+                id,
+                group_word,
+                group_language,
+                group_id,
+                date,
+              }) => (
+                <Fragment key={`${date}-${id}`}>
+                  <WotdItem
+                    word={word}
+                    body={body}
+                    id={id}
+                    date={date}
+                    group_word={group_word}
+                    group_id={group_id}
+                    group_language={group_language}
+                  />
+                  <Divider />
+                </Fragment>
+              ),
+            )}
+          </List>
           <div>{isFetching ? 'Background Updating...' : ' '}</div>
         </>
       )}
