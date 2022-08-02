@@ -43,6 +43,8 @@ const WotdScreen = () => {
   const newDateObject: WordOfTheDayType = {
     word: '',
     body: '',
+    etymology: '',
+    definition: '',
     id: -1,
     group_word: '',
     group_language: '',
@@ -107,6 +109,8 @@ const WotdScreen = () => {
             <WotdItem
               word={wotd.word}
               body={wotd.body}
+              etymology={wotd.etymology}
+              definition={wotd.definition}
               id={wotd.id}
               date={wotd.date}
               group_word={wotd.group_word}
@@ -136,6 +140,8 @@ const WotdScreen = () => {
               ({
                 word,
                 body,
+                definition,
+                etymology,
                 id,
                 group_word,
                 group_language,
@@ -146,6 +152,8 @@ const WotdScreen = () => {
                   <WotdItem
                     word={word}
                     body={body}
+                    etymology={etymology}
+                    definition={definition}
                     id={id}
                     date={date}
                     group_word={group_word}

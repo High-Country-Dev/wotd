@@ -12,6 +12,8 @@ const updateWotd = async ({
   id,
   word,
   body,
+  etymology,
+  definition,
   group_id,
   group_language,
   group_word,
@@ -23,6 +25,8 @@ const updateWotd = async ({
 
   return db.ref(`wotd/${date}`).update({
     body,
+    etymology,
+    definition,
     word,
     date,
     id,
@@ -50,11 +54,23 @@ const updateWotd = async ({
 const useUpdateWotd = () => {
   const queryClient = useQueryClient()
   return useMutation<string[], unknown, EditWordOfTheDayType, unknown>(
-    ({ date, id, body, word, group_id, group_language, group_word }) =>
+    ({
+      date,
+      id,
+      etymology,
+      definition,
+      body,
+      word,
+      group_id,
+      group_language,
+      group_word,
+    }) =>
       updateWotd({
         date,
         id,
         body,
+        etymology,
+        definition,
         word,
         group_id,
         group_language,

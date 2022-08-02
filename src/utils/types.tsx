@@ -15,8 +15,8 @@ export type WordOfTheDayType = {
 export type EditWordOfTheDayType = {
   body: string | null
   date: string | null
-  definition?: string | null
-  etymology?: string | null
+  definition: string | null
+  etymology: string | null
   id: number | null
   language?: string | null
   word: string | null
